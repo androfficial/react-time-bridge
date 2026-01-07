@@ -23,22 +23,22 @@ export const OptimalSlotsSummary = ({
     return (
       <div
         aria-live="polite"
-        className="animate-scale-in flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200/70 bg-linear-to-r from-emerald-50 via-emerald-50/80 to-emerald-100/50 px-4 py-3 shadow-sm dark:border-emerald-800/50 dark:from-emerald-900/30 dark:via-emerald-900/20 dark:to-emerald-800/10"
+        className="animate-scale-in flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-200/70 bg-linear-to-r from-emerald-50 via-emerald-50/80 to-emerald-100/50 px-3 py-2.5 shadow-sm sm:gap-3 sm:px-4 sm:py-3 dark:border-emerald-800/50 dark:from-emerald-900/30 dark:via-emerald-900/20 dark:to-emerald-800/10"
         role="status"
       >
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 via-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25">
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 via-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25 sm:h-9 sm:w-9">
             <Sparkles aria-hidden="true" className="h-4 w-4 text-white" />
           </div>
-          <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+          <span className="text-xs font-bold text-emerald-700 sm:text-sm dark:text-emerald-300">
             {optimalSlots.length} optimal{' '}
             {optimalSlots.length === 1 ? 'slot' : 'slots'}
           </span>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {optimalSlots.slice(0, 8).map((slot) => (
+        <div className="flex min-w-0 flex-1 flex-wrap gap-1.5 overflow-x-auto">
+          {optimalSlots.slice(0, 6).map((slot) => (
             <Badge
-              className="h-7 cursor-pointer border-emerald-400/60 bg-white/95 px-2.5 text-xs font-bold text-emerald-700 tabular-nums shadow-sm transition-all duration-200 hover:bg-emerald-500 hover:text-white dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-600"
+              className="h-6 cursor-pointer border-emerald-400/60 bg-white/95 px-2 text-[10px] font-bold text-emerald-700 tabular-nums shadow-sm transition-all duration-200 hover:bg-emerald-500 hover:text-white sm:h-7 sm:px-2.5 sm:text-xs dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-600"
               key={slot.utcHour}
               onClick={() => onSlotSelect(slot.utcHour)}
               variant="outline"
@@ -46,12 +46,12 @@ export const OptimalSlotsSummary = ({
               {slot.utcHour.toString().padStart(2, '0')}:00
             </Badge>
           ))}
-          {optimalSlots.length > 8 && (
+          {optimalSlots.length > 6 && (
             <Badge
-              className="h-7 px-3 text-xs font-semibold"
+              className="h-6 shrink-0 px-2 text-[10px] font-semibold sm:h-7 sm:px-3 sm:text-xs"
               variant="secondary"
             >
-              +{optimalSlots.length - 8}
+              +{optimalSlots.length - 6}
             </Badge>
           )}
         </div>

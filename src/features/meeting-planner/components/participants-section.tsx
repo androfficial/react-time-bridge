@@ -34,36 +34,39 @@ export const ParticipantsSection = ({
       {/* Decorative gradient */}
       <div className="from-primary/5 absolute inset-0 bg-linear-to-b to-transparent" />
 
-      <CardHeader className="relative pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-3 text-base font-semibold">
-            <div className="from-primary via-primary to-primary/70 shadow-primary/30 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br shadow-lg">
+      <CardHeader className="relative pb-2 sm:pb-3">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold sm:gap-3">
+            <div className="from-primary via-primary to-primary/70 shadow-primary/30 flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br shadow-lg sm:h-10 sm:w-10">
               <Users
                 aria-hidden="true"
-                className="text-primary-foreground h-5 w-5"
+                className="text-primary-foreground h-4 w-4 sm:h-5 sm:w-5"
               />
             </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-semibold" id="participants-heading">
+            <div className="flex min-w-0 flex-col">
+              <span
+                className="truncate text-base font-semibold sm:text-lg"
+                id="participants-heading"
+              >
                 Participants
               </span>
-              <span className="text-muted-foreground text-xs font-normal">
+              <span className="text-muted-foreground xs:block hidden text-xs font-normal">
                 Manage team availability
               </span>
             </div>
           </CardTitle>
-          <Badge className="from-primary to-primary/80 text-primary-foreground h-7 min-w-7 justify-center bg-linear-to-r text-sm font-bold shadow-lg">
+          <Badge className="from-primary to-primary/80 text-primary-foreground h-6 min-w-6 justify-center bg-linear-to-r text-xs font-bold shadow-lg sm:h-7 sm:min-w-7 sm:text-sm">
             {participants.length}
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="relative space-y-3 pt-0">
+      <CardContent className="relative space-y-2 pt-0 sm:space-y-3">
         <Button
-          className="from-primary via-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-primary/25 hover:shadow-primary/40 w-full gap-2 rounded-xl bg-linear-to-r py-3 text-sm font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+          className="from-primary via-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-primary/25 hover:shadow-primary/40 w-full gap-2 rounded-xl bg-linear-to-r py-2 text-xs font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] sm:py-3 sm:text-sm"
           onClick={onAdd}
           size="lg"
         >
-          <Plus aria-hidden="true" className="h-5 w-5" />
+          <Plus aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" />
           Add Participant
         </Button>
 

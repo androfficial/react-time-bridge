@@ -52,28 +52,36 @@ export const TimeSlotGrid = ({
   const selectedSlotData = slots.find((s) => s.utcHour === selectedSlot);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3 sm:space-y-5">
       {/* Header with legend */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h3 className="text-base font-semibold">24-Hour Availability (UTC)</h3>
-        <div className="flex items-center gap-5 text-xs">
-          <span className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-lg bg-linear-to-br from-emerald-400 to-emerald-500 shadow-sm ring-2 ring-emerald-500/30" />
-            <span className="text-muted-foreground font-semibold">All</span>
+      <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+        <h3 className="text-xs font-semibold sm:text-base">
+          24-Hour Availability (UTC)
+        </h3>
+        <div className="flex items-center gap-2 text-[9px] sm:gap-5 sm:text-xs">
+          <span className="flex items-center gap-1">
+            <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-emerald-400 to-emerald-500 sm:h-4 sm:w-4 sm:rounded-lg" />
+            <span className="text-muted-foreground font-medium sm:font-semibold">
+              All
+            </span>
           </span>
-          <span className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-lg bg-linear-to-br from-amber-300 to-amber-400 shadow-sm ring-2 ring-amber-400/30" />
-            <span className="text-muted-foreground font-semibold">Some</span>
+          <span className="flex items-center gap-1">
+            <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-amber-300 to-amber-400 sm:h-4 sm:w-4 sm:rounded-lg" />
+            <span className="text-muted-foreground font-medium sm:font-semibold">
+              Some
+            </span>
           </span>
-          <span className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-lg bg-linear-to-br from-rose-300 to-rose-400 shadow-sm ring-2 ring-rose-400/30" />
-            <span className="text-muted-foreground font-semibold">None</span>
+          <span className="flex items-center gap-1">
+            <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-rose-300 to-rose-400 sm:h-4 sm:w-4 sm:rounded-lg" />
+            <span className="text-muted-foreground font-medium sm:font-semibold">
+              None
+            </span>
           </span>
         </div>
       </div>
 
       {/* Responsive Grid Layout */}
-      <div className="grid grid-cols-6 gap-2.5 p-1 sm:grid-cols-8 md:grid-cols-12">
+      <div className="xs:grid-cols-6 grid grid-cols-4 gap-1 sm:grid-cols-8 sm:gap-2 md:grid-cols-12">
         {slots.map((slot) => {
           const period = getTimePeriod(slot.utcHour);
           const isSelected = selectedSlot === slot.utcHour;
@@ -85,7 +93,7 @@ export const TimeSlotGrid = ({
               } of ${totalParticipants} available`}
               aria-pressed={isSelected}
               className={cn(
-                'group relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl shadow-md transition-all duration-200',
+                'group relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg shadow-md transition-all duration-200 sm:rounded-xl',
                 getSlotColorClass(slot.availableCount, totalParticipants),
                 isSelected
                   ? 'ring-primary ring-offset-background shadow-lg ring-2 ring-offset-1'
@@ -97,13 +105,13 @@ export const TimeSlotGrid = ({
               type="button"
             >
               <TimePeriodIcon
-                className="mb-0.5 h-4 w-4 drop-shadow-sm"
+                className="mb-0.5 h-3 w-3 drop-shadow-sm sm:h-4 sm:w-4"
                 period={period}
               />
-              <span className="text-sm leading-tight font-bold">
+              <span className="text-xs leading-tight font-bold sm:text-sm">
                 {slot.utcHour.toString().padStart(2, '0')}
               </span>
-              <span className="text-[9px] font-semibold opacity-70">
+              <span className="text-[8px] font-semibold opacity-70 sm:text-[9px]">
                 {slot.availableCount}/{totalParticipants}
               </span>
             </button>

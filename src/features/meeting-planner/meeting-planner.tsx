@@ -55,24 +55,26 @@ export const MeetingPlanner = () => {
           <div className="from-primary/5 absolute inset-0 bg-linear-to-br to-transparent" />
 
           <CardHeader className="relative pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-3 text-base font-semibold">
-                <div className="from-primary via-primary to-primary/70 shadow-primary/30 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br shadow-lg">
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="flex min-w-0 items-center gap-2 text-base font-semibold sm:gap-3">
+                <div className="from-primary via-primary to-primary/70 shadow-primary/30 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br shadow-lg sm:h-10 sm:w-10">
                   <Calendar
                     aria-hidden="true"
-                    className="text-primary-foreground h-5 w-5"
+                    className="text-primary-foreground h-4 w-4 sm:h-5 sm:w-5"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-semibold">Meeting Times</span>
-                  <span className="text-muted-foreground text-xs font-normal">
+                <div className="flex min-w-0 flex-col">
+                  <span className="truncate text-base font-semibold sm:text-lg">
+                    Meeting Times
+                  </span>
+                  <span className="text-muted-foreground xs:block hidden text-xs font-normal">
                     Find the perfect time for everyone
                   </span>
                 </div>
               </CardTitle>
               <Button
                 aria-label="Export meeting times to text file"
-                className="hover:bg-primary hover:text-primary-foreground border-border/60 text-foreground gap-2 rounded-xl px-4 text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg dark:text-white"
+                className="hover:bg-primary hover:text-primary-foreground border-border/60 text-foreground shrink-0 gap-2 rounded-xl px-3 text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg sm:px-4 dark:text-white"
                 onClick={exportToText}
                 size="sm"
                 variant="outline"
@@ -82,7 +84,7 @@ export const MeetingPlanner = () => {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="relative space-y-5 pt-0">
+          <CardContent className="relative space-y-3 pt-0 sm:space-y-5">
             <OptimalSlotsSummary
               onSlotSelect={selectSlot}
               optimalSlots={optimalSlots}

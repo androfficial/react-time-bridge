@@ -9,13 +9,11 @@ import type { Participant } from '@/types';
 import { Clock, Trash2, User } from 'lucide-react';
 
 import { HourPicker, TimezoneSelect } from '@/components/shared';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { findTimezoneById } from '@/constants';
-import { formatHour } from '@/utils';
 
 type ParticipantCardProps = {
   canRemove: boolean;
@@ -83,9 +81,9 @@ export const ParticipantCard = ({
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
       )}
-      <CardContent className="relative space-y-4 p-4">
-        <div className="flex gap-3">
-          <div className="flex-1 space-y-1.5">
+      <CardContent className="relative space-y-3 p-3 sm:space-y-4 sm:p-4">
+        <div className="xs:grid-cols-2 grid grid-cols-1 gap-2 sm:gap-3">
+          <div className="space-y-1.5">
             <Label
               className="text-muted-foreground text-[10px] font-semibold tracking-widest uppercase"
               htmlFor={`name-${participant.id}`}
@@ -103,7 +101,7 @@ export const ParticipantCard = ({
               />
             </div>
           </div>
-          <div className="flex-1 space-y-1.5">
+          <div className="space-y-1.5">
             <Label
               className="text-muted-foreground text-[10px] font-semibold tracking-widest uppercase"
               id={`timezone-label-${participant.id}`}
@@ -117,35 +115,29 @@ export const ParticipantCard = ({
           </div>
         </div>
 
-        <div className="bg-muted/50 border-border/50 flex items-center justify-between gap-3 rounded-lg border px-3 py-2">
-          <div className="flex items-center gap-2">
-            <div className="from-primary/20 to-primary/5 flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br">
-              <Clock aria-hidden="true" className="text-primary h-4 w-4" />
+        <div className="bg-muted/50 border-border/50 flex flex-wrap items-center gap-1.5 rounded-lg border px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="from-primary/20 to-primary/5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-linear-to-br sm:h-8 sm:w-8">
+              <Clock
+                aria-hidden="true"
+                className="text-primary h-3.5 w-3.5 sm:h-4 sm:w-4"
+              />
             </div>
-            <span className="text-xs font-semibold tracking-wide uppercase">
+            <span className="text-[10px] font-semibold tracking-wide uppercase sm:text-xs">
               Hours
             </span>
-            <div className="flex items-center gap-1.5">
-              <HourPicker
-                onChange={handleWorkingHoursStartChange}
-                value={participant.workingHours.start}
-              />
-              <span className="text-muted-foreground text-sm font-medium">
-                –
-              </span>
-              <HourPicker
-                onChange={handleWorkingHoursEndChange}
-                value={participant.workingHours.end}
-              />
-            </div>
           </div>
-          <Badge
-            className="bg-primary/15 text-primary border-primary/30 h-7 px-2.5 text-xs font-semibold"
-            variant="outline"
-          >
-            {formatHour(participant.workingHours.start, false)} –{' '}
-            {formatHour(participant.workingHours.end, false)}
-          </Badge>
+          <div className="flex flex-1 items-center justify-end gap-1 sm:gap-1.5">
+            <HourPicker
+              onChange={handleWorkingHoursStartChange}
+              value={participant.workingHours.start}
+            />
+            <span className="text-muted-foreground text-sm font-medium">–</span>
+            <HourPicker
+              onChange={handleWorkingHoursEndChange}
+              value={participant.workingHours.end}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
