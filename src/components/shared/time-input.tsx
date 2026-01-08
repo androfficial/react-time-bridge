@@ -91,17 +91,19 @@ export const TimeInput = ({
         </PopoverTrigger>
         <PopoverContent
           align="start"
+          avoidCollisions
           className="w-auto p-0"
+          collisionPadding={16}
           side="bottom"
           sideOffset={4}
         >
           <div className="flex">
             {/* Hours column */}
             <div className="border-border/50 border-r">
-              <div className="text-muted-foreground border-border/50 border-b px-3 py-2 text-center text-xs font-semibold">
+              <div className="text-muted-foreground border-border/50 border-b px-3 py-1.5 text-center text-xs font-semibold">
                 Hour
               </div>
-              <ScrollArea className="h-48 sm:h-50">
+              <ScrollArea className="h-40 sm:h-48">
                 <div className="p-1">
                   {HOURS.map((hour) => {
                     const h = parseInt(hour, 10);
@@ -110,7 +112,7 @@ export const TimeInput = ({
                     return (
                       <button
                         className={cn(
-                          'hover:bg-accent flex w-full items-center justify-between gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
+                          'hover:bg-accent flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm transition-colors sm:px-3 sm:py-1.5',
                           hours === hour &&
                             'bg-primary text-primary-foreground hover:bg-primary/90'
                         )}
@@ -130,15 +132,15 @@ export const TimeInput = ({
             </div>
             {/* Minutes column */}
             <div>
-              <div className="text-muted-foreground border-border/50 border-b px-3 py-2 text-center text-xs font-semibold">
+              <div className="text-muted-foreground border-border/50 border-b px-3 py-1.5 text-center text-xs font-semibold">
                 Min
               </div>
-              <ScrollArea className="h-48 sm:h-50">
+              <ScrollArea className="h-40 sm:h-48">
                 <div className="p-1">
                   {MINUTES.map((minute) => (
                     <button
                       className={cn(
-                        'hover:bg-accent w-full rounded-md px-4 py-1.5 text-sm font-medium tabular-nums transition-colors',
+                        'hover:bg-accent w-full rounded-md px-3 py-1 text-sm font-medium tabular-nums transition-colors sm:px-4 sm:py-1.5',
                         minutes === minute &&
                           'bg-primary text-primary-foreground hover:bg-primary/90'
                       )}
