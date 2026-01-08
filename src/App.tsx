@@ -5,7 +5,7 @@
 import { Header, MainTabs } from '@/components/layout';
 import { ThemeProvider } from '@/components/theme';
 
-const App = () => {
+export const App = () => {
   return (
     <ThemeProvider>
       <div className="bg-background relative flex h-dvh flex-col overflow-hidden">
@@ -24,5 +24,3 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
-export default App;
