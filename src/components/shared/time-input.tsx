@@ -90,11 +90,11 @@ export const TimeInput = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          align="start"
+          align="center"
           avoidCollisions
           className="w-auto p-0"
-          collisionPadding={16}
-          side="bottom"
+          collisionPadding={8}
+          side="top"
           sideOffset={4}
         >
           <div className="flex">
