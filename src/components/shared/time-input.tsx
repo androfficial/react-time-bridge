@@ -93,7 +93,7 @@ export const TimeInput = ({
           align="center"
           avoidCollisions
           className="w-auto p-0"
-          collisionPadding={8}
+          collisionPadding={{ top: 8, bottom: 8, left: 16, right: 16 }}
           side="top"
           sideOffset={4}
         >
