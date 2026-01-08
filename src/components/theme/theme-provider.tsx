@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { STORAGE_KEYS } from '@/constants';
+import { safeStorageGetItem, safeStorageSetItem } from '@/utils';
 
 import { ThemeContext } from './theme-context';
 
@@ -19,8 +20,8 @@ const getSystemTheme = (): 'light' | 'dark' => {
 
 const getInitialTheme = (): Theme => {
   if (typeof window === 'undefined') return 'system';
-  const stored = localStorage.getItem(STORAGE_KEYS.THEME) as Theme | null;
-  return stored || 'system';
+  const stored = safeStorageGetItem(STORAGE_KEYS.THEME) as Theme | null;
+  return stored ?? 'system';
 };
 
 type ThemeProviderProps = {
@@ -59,7 +60,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem(STORAGE_KEYS.THEME, newTheme);
+    safeStorageSetItem(STORAGE_KEYS.THEME, newTheme);
   }, []);
 
   const value = useMemo(

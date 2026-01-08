@@ -11,7 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RATING_COLOR_CLASSES } from '@/constants';
 import { cn } from '@/lib/utils';
-import { formatHour, getRatingLabel, getTimePeriod } from '@/utils';
+import { formatHour, getTimePeriod } from '@/utils';
+
+import { getMeetingRatingLabel } from '../utils';
 
 type SuggestedTimesProps = {
   onSlotSelect: (utcHour: number) => void;
@@ -76,7 +78,7 @@ export const SuggestedTimes = ({
                   </div>
                 </div>
                 <Badge className={cn('text-xs font-bold', colors.badge)}>
-                  {getRatingLabel(suggestion.rating)}
+                  {getMeetingRatingLabel(suggestion.rating)}
                 </Badge>
               </div>
 

@@ -40,19 +40,6 @@ export interface MeetingSlotResult {
 }
 
 /**
- * Time analysis for a specific hour
- */
-export interface TimeAnalysis {
-  color: string;
-  hour: number;
-  icon: string;
-  label: string;
-  period: 'early-morning' | 'morning' | 'afternoon' | 'evening' | 'night';
-  suitable: boolean;
-  warning?: string;
-}
-
-/**
  * Rating for meeting time suggestion
  */
 export type MeetingRating = 'excellent' | 'good' | 'acceptable' | 'poor';

@@ -147,19 +147,6 @@ export const getMeetingRating = (score: number): MeetingRating => {
 };
 
 /**
- * Get rating label with emoji
- */
-export const getRatingLabel = (rating: MeetingRating): string => {
-  const labels: Record<MeetingRating, string> = {
-    excellent: '✅ Perfect',
-    good: '👍 Good',
-    acceptable: '⚠️ Acceptable',
-    poor: '❌ Not suitable',
-  };
-  return labels[rating];
-};
-
-/**
  * Get top 3 suggested meeting times
  */
 export const getTopSuggestions = (
@@ -167,30 +154,35 @@ export const getTopSuggestions = (
   referenceDate: Date = new Date()
 ): TimeSuggestion[] => {
   const allSlots = calculateMeetingSlots(participants, referenceDate);
+  const participantById = new Map(participants.map((p) => [p.id, p]));
 
   const suggestions: TimeSuggestion[] = allSlots.map((slot) => {
     const { score, perfectCount, acceptableCount } =
       calculateSlotDetailedScore(slot);
     const rating = getMeetingRating(score);
 
-    const participantTimes = slot.participantTimes.map((pt) => {
-      const participant = participants.find((p) => p.id === pt.participantId)!;
-      const period = pt.period;
-      const suitable = isTimePeriodSuitable(period);
-      const acceptable = isTimePeriodAcceptable(period);
+    const participantTimes = slot.participantTimes
+      .map((pt) => {
+        const participant = participantById.get(pt.participantId);
+        if (!participant) return null;
 
-      const localTime = new Date(referenceDate);
-      localTime.setHours(pt.localHour, 0, 0, 0);
+        const period = pt.period;
+        const suitable = isTimePeriodSuitable(period);
+        const acceptable = isTimePeriodAcceptable(period);
 
-      return {
-        participant,
-        localTime,
-        localHour: pt.localHour,
-        suitable,
-        acceptable,
-        warning: pt.warning,
-      };
-    });
+        const localTime = new Date(referenceDate);
+        localTime.setHours(pt.localHour, 0, 0, 0);
+
+        return {
+          participant,
+          localTime,
+          localHour: pt.localHour,
+          suitable,
+          acceptable,
+          warning: pt.warning,
+        };
+      })
+      .filter((pt): pt is NonNullable<typeof pt> => pt !== null);
 
     const time = new Date(referenceDate);
     time.setUTCHours(slot.utcHour, 0, 0, 0);

@@ -11,15 +11,12 @@ import { Clock, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { STORAGE_KEYS, VALID_TABS } from '@/constants';
 import { MeetingPlanner, TimeConverter } from '@/features';
+import { safeStorageGetItem, safeStorageSetItem } from '@/utils';
 
 const getInitialTab = (): TabValue => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
-    if (stored && VALID_TABS.includes(stored as TabValue)) {
-      return stored as TabValue;
-    }
-  } catch {
-    // localStorage not available
+  const stored = safeStorageGetItem(STORAGE_KEYS.ACTIVE_TAB);
+  if (stored && VALID_TABS.includes(stored as TabValue)) {
+    return stored as TabValue;
   }
   return 'converter';
 };
@@ -30,11 +27,7 @@ export const MainTabs = () => {
   const handleTabChange = (value: string) => {
     const tab = value as TabValue;
     setActiveTab(tab);
-    try {
-      localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, tab);
-    } catch {
-      // localStorage not available
-    }
+    safeStorageSetItem(STORAGE_KEYS.ACTIVE_TAB, tab);
   };
 
   return (

@@ -2,10 +2,13 @@
  * Meeting Planner - main feature component
  */
 
+import { useCallback } from 'react';
+
 import { Calendar, Download } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { downloadTextFile } from '@/utils';
 
 import {
   OptimalSlotsSummary,
@@ -14,6 +17,7 @@ import {
   TimeSlotGrid,
 } from './components';
 import { useMeetingPlanner } from './hooks';
+import { getMeetingPlannerExportFileName } from './utils';
 
 export const MeetingPlanner = () => {
   const {
@@ -26,8 +30,14 @@ export const MeetingPlanner = () => {
     updateParticipant,
     removeParticipant,
     selectSlot,
-    exportToText,
+    getExportText,
   } = useMeetingPlanner();
+
+  const handleExport = useCallback(() => {
+    const text = getExportText();
+    const fileName = getMeetingPlannerExportFileName();
+    downloadTextFile(text, fileName);
+  }, [getExportText]);
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-4">
@@ -75,7 +85,7 @@ export const MeetingPlanner = () => {
               <Button
                 aria-label="Export meeting times to text file"
                 className="hover:bg-primary hover:text-primary-foreground border-border/60 text-foreground shrink-0 gap-2 rounded-xl px-3 text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg sm:px-4 dark:text-white"
-                onClick={exportToText}
+                onClick={handleExport}
                 size="sm"
                 variant="outline"
               >

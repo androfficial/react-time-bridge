@@ -18,7 +18,11 @@ import {
   generateParticipantId,
   getInitialTimezoneId,
   getTopSuggestions,
+  safeStorageGetItem,
+  safeStorageSetItem,
 } from '@/utils';
+
+import { buildMeetingPlannerExportText } from '../utils';
 
 const createDefaultParticipant = (
   name: string,
@@ -42,7 +46,7 @@ const getInitialTimezone = (): string => {
  */
 const loadParticipants = (): Participant[] | null => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.PARTICIPANTS);
+    const stored = safeStorageGetItem(STORAGE_KEYS.PARTICIPANTS);
     if (stored) {
       const parsed = JSON.parse(stored) as Participant[];
       // Validate and restore timezone objects
@@ -62,10 +66,7 @@ const loadParticipants = (): Participant[] | null => {
  */
 const saveParticipants = (participants: Participant[]) => {
   try {
-    localStorage.setItem(
-      STORAGE_KEYS.PARTICIPANTS,
-      JSON.stringify(participants)
-    );
+    safeStorageSetItem(STORAGE_KEYS.PARTICIPANTS, JSON.stringify(participants));
   } catch {
     console.warn('Failed to save participants to localStorage');
   }
@@ -136,58 +137,13 @@ export const useMeetingPlanner = () => {
     setSelectedSlot((prev) => (prev === utcHour ? null : utcHour));
   }, []);
 
-  // Export meeting results to text
-  const exportToText = useCallback(() => {
-    const lines: string[] = [
-      '=== Time Bridge Meeting Planner ===',
-      '',
-      `Generated: ${new Date().toLocaleString()}`,
-      '',
-      '--- Participants ---',
-    ];
-
-    participants.forEach((p) => {
-      lines.push(
-        `• ${p.name} (${p.timezone.name}, ${p.timezone.abbreviation})`
-      );
-      lines.push(
-        `  Working hours: ${p.workingHours.start}:00 - ${p.workingHours.end}:00`
-      );
+  // Build meeting results as plain text (pure; no file download side-effects)
+  const getExportText = useCallback((): string => {
+    return buildMeetingPlannerExportText({
+      optimalSlots,
+      participants,
     });
-
-    lines.push('');
-    lines.push('--- Optimal Meeting Times (UTC) ---');
-
-    if (optimalSlots.length > 0) {
-      optimalSlots.forEach((slot) => {
-        const localTimes = participants
-          .map((p) => {
-            const localHour =
-              (slot.utcHour + parseInt(p.timezone.offset.split(':')[0]) + 24) %
-              24;
-            return `${p.name}: ${localHour.toString().padStart(2, '0')}:00`;
-          })
-          .join(', ');
-        lines.push(`• ${slot.utcHour.toString().padStart(2, '0')}:00 UTC`);
-        lines.push(`  Local times: ${localTimes}`);
-      });
-    } else {
-      lines.push(
-        'No optimal times found where all participants are available.'
-      );
-    }
-
-    const text = lines.join('\n');
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `meeting-times-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [participants, optimalSlots]);
+  }, [optimalSlots, participants]);
 
   return {
     participants,
@@ -199,6 +155,6 @@ export const useMeetingPlanner = () => {
     updateParticipant,
     removeParticipant,
     selectSlot,
-    exportToText,
+    getExportText,
   };
 };

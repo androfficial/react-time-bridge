@@ -6,12 +6,16 @@ import type { ConvertedTimeResult } from '../hooks/use-time-converter';
 
 import { Globe, X } from 'lucide-react';
 
-import { TimePeriodIcon, TimezoneSelect } from '@/components/shared';
+import {
+  getTimePeriodBgClass,
+  TimePeriodIcon,
+  TimezoneSelect,
+} from '@/components/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { getTimePeriodBgClass, getTimezoneOffset } from '@/utils';
+import { getTimezoneOffset } from '@/utils';
 
 type ConvertedTimeCardProps = {
   canRemove: boolean;
