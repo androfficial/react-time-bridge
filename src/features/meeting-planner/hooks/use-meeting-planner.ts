@@ -9,17 +9,16 @@ import type { Participant } from '@/types';
 import {
   DEFAULT_WORKING_HOURS,
   findTimezoneById,
+  STORAGE_KEYS,
   TIMEZONES,
 } from '@/constants';
 import {
   calculateMeetingSlots,
   findOptimalSlots,
   generateParticipantId,
+  getInitialTimezoneId,
   getTopSuggestions,
-  getUserTimezone,
 } from '@/utils';
-
-const STORAGE_KEY = 'time-bridge-participants';
 
 const createDefaultParticipant = (
   name: string,
@@ -35,9 +34,7 @@ const createDefaultParticipant = (
  * Get initial timezone - user's timezone if available in list
  */
 const getInitialTimezone = (): string => {
-  const userTimezone = getUserTimezone();
-  const found = findTimezoneById(userTimezone);
-  return found ? userTimezone : 'America/New_York';
+  return getInitialTimezoneId(findTimezoneById);
 };
 
 /**
@@ -45,7 +42,7 @@ const getInitialTimezone = (): string => {
  */
 const loadParticipants = (): Participant[] | null => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.PARTICIPANTS);
     if (stored) {
       const parsed = JSON.parse(stored) as Participant[];
       // Validate and restore timezone objects
@@ -65,7 +62,10 @@ const loadParticipants = (): Participant[] | null => {
  */
 const saveParticipants = (participants: Participant[]) => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
+    localStorage.setItem(
+      STORAGE_KEYS.PARTICIPANTS,
+      JSON.stringify(participants)
+    );
   } catch {
     console.warn('Failed to save participants to localStorage');
   }

@@ -234,16 +234,3 @@ export const getTimezoneGroups = (): TimezoneGroup[] => {
 export const findTimezoneById = (id: string): Timezone | undefined => {
   return TIMEZONES.find((tz) => tz.id === id);
 };
-
-/**
- * Default working hours (9 AM - 6 PM)
- */
-export const DEFAULT_WORKING_HOURS = {
-  start: 9,
-  end: 18,
-};
-
-/**
- * Hours in a day for iteration
- */
-export const HOURS_IN_DAY = Array.from({ length: 24 }, (_, i) => i);

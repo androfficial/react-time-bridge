@@ -3,7 +3,7 @@
  */
 
 import { Header, MainTabs } from '@/components/layout';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/theme';
 
 const App = () => {
   return (

@@ -4,11 +4,9 @@
  */
 
 import type { MeetingSlotResult } from '@/types';
-import type { TimePeriod } from '@/utils';
-
-import { Moon, Sun, Sunrise, Sunset } from 'lucide-react';
 
 import { TimePeriodIcon } from '@/components/shared';
+import { TIME_GROUPS } from '@/constants';
 import { cn } from '@/lib/utils';
 import { formatHour, getTimePeriod } from '@/utils';
 
@@ -20,54 +18,6 @@ type TimeSlotGridProps = {
   slots: MeetingSlotResult[];
   totalParticipants: number;
 };
-
-type TimeGroup = {
-  bgClass: string;
-  hours: number[];
-  Icon: typeof Sun;
-  iconColor: string;
-  label: string;
-  period: TimePeriod;
-};
-
-const timeGroups: TimeGroup[] = [
-  {
-    period: 'night',
-    label: 'Night',
-    hours: [0, 1, 2, 3, 4, 5],
-    Icon: Moon,
-    iconColor: 'text-indigo-500',
-    bgClass:
-      'from-indigo-50 to-indigo-100/50 dark:from-indigo-950/40 dark:to-indigo-900/20',
-  },
-  {
-    period: 'morning',
-    label: 'Morning',
-    hours: [6, 7, 8, 9, 10, 11],
-    Icon: Sunrise,
-    iconColor: 'text-amber-500',
-    bgClass:
-      'from-amber-50 to-orange-100/50 dark:from-amber-950/40 dark:to-orange-900/20',
-  },
-  {
-    period: 'afternoon',
-    label: 'Afternoon',
-    hours: [12, 13, 14, 15, 16, 17],
-    Icon: Sun,
-    iconColor: 'text-green-500',
-    bgClass:
-      'from-green-50 to-emerald-100/50 dark:from-green-950/40 dark:to-emerald-900/20',
-  },
-  {
-    period: 'evening',
-    label: 'Evening',
-    hours: [18, 19, 20, 21, 22, 23],
-    Icon: Sunset,
-    iconColor: 'text-blue-500',
-    bgClass:
-      'from-blue-50 to-sky-100/50 dark:from-blue-950/40 dark:to-sky-900/20',
-  },
-];
 
 export const TimeSlotGrid = ({
   slots,
@@ -134,7 +84,7 @@ export const TimeSlotGrid = ({
 
       {/* Time Period Groups */}
       <div className="space-y-2">
-        {timeGroups.map((group) => {
+        {TIME_GROUPS.map((group) => {
           const groupSlots = group.hours
             .map((h) => slotsByHour.get(h))
             .filter(Boolean) as MeetingSlotResult[];

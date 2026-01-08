@@ -2,7 +2,7 @@
  * Timezone conversion utilities using date-fns-tz
  */
 
-import type { TimeConversionResult, Timezone } from '@/types';
+import type { TimeConversionResult, TimePeriod, Timezone } from '@/types';
 
 import { setHours, setMinutes, setSeconds } from 'date-fns';
 import { formatInTimeZone, fromZonedTime, toZonedTime } from 'date-fns-tz';
@@ -205,14 +205,17 @@ export const getUserTimezone = (): string => {
 };
 
 /**
- * Time period of day
+ * Get initial timezone - user's timezone if available in TIMEZONES list, otherwise first in list
+ * Note: This function requires TIMEZONES from constants, imported where used
  */
-export type TimePeriod =
-  | 'early-morning'
-  | 'morning'
-  | 'afternoon'
-  | 'evening'
-  | 'night';
+export const getInitialTimezoneId = (
+  findTimezone: (id: string) => unknown,
+  fallbackId: string = 'America/New_York'
+): string => {
+  const userTimezone = getUserTimezone();
+  const found = findTimezone(userTimezone);
+  return found ? userTimezone : fallbackId;
+};
 
 /**
  * Get time period based on hour (0-23)
@@ -266,4 +269,19 @@ export const isTimePeriodSuitable = (period: TimePeriod): boolean => {
  */
 export const isTimePeriodAcceptable = (period: TimePeriod): boolean => {
   return period === 'early-morning' || period === 'evening';
+};
+
+/**
+ * Get background color class based on time period
+ * Per spec: early-morning=orange, morning=yellow, afternoon=green, evening=blue, night=dark blue
+ */
+export const getTimePeriodBgClass = (period: TimePeriod): string => {
+  const bgClasses: Record<TimePeriod, string> = {
+    'early-morning': 'bg-orange-100 dark:bg-orange-900/30',
+    morning: 'bg-yellow-100 dark:bg-yellow-900/30',
+    afternoon: 'bg-green-100 dark:bg-green-900/30',
+    evening: 'bg-blue-100 dark:bg-blue-900/30',
+    night: 'bg-indigo-200 dark:bg-indigo-900/40',
+  };
+  return bgClasses[period];
 };

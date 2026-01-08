@@ -10,6 +10,16 @@ export interface Timezone {
   region: string;
 }
 
+/**
+ * Time period of day
+ */
+export type TimePeriod =
+  | 'early-morning'
+  | 'morning'
+  | 'afternoon'
+  | 'evening'
+  | 'night';
+
 export interface TimezoneGroup {
   region: string;
   timezones: Timezone[];

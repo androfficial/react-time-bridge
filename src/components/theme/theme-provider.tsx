@@ -4,11 +4,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { STORAGE_KEYS } from '@/constants';
+
 import { ThemeContext } from './theme-context';
 
 type Theme = 'light' | 'dark' | 'system';
-
-const STORAGE_KEY = 'time-bridge-theme';
 
 const getSystemTheme = (): 'light' | 'dark' => {
   if (typeof window === 'undefined') return 'light';
@@ -19,7 +19,7 @@ const getSystemTheme = (): 'light' | 'dark' => {
 
 const getInitialTheme = (): Theme => {
   if (typeof window === 'undefined') return 'system';
-  const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
+  const stored = localStorage.getItem(STORAGE_KEYS.THEME) as Theme | null;
   return stored || 'system';
 };
 
@@ -59,7 +59,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem(STORAGE_KEY, newTheme);
+    localStorage.setItem(STORAGE_KEYS.THEME, newTheme);
   }, []);
 
   const value = useMemo(

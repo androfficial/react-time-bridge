@@ -9,6 +9,7 @@ import { Star, Trophy } from 'lucide-react';
 import { TimePeriodIcon } from '@/components/shared';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RATING_COLOR_CLASSES } from '@/constants';
 import { cn } from '@/lib/utils';
 import { formatHour, getRatingLabel, getTimePeriod } from '@/utils';
 
@@ -16,37 +17,6 @@ type SuggestedTimesProps = {
   onSlotSelect: (utcHour: number) => void;
   selectedSlot: number | null;
   suggestions: TimeSuggestion[];
-};
-
-const getRatingColorClass = (
-  rating: TimeSuggestion['rating']
-): { badge: string; card: string } => {
-  switch (rating) {
-    case 'excellent':
-      return {
-        badge:
-          'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/50 dark:text-emerald-300 dark:border-emerald-700',
-        card: 'border-emerald-200/60 bg-emerald-50/50 dark:border-emerald-800/60 dark:bg-emerald-900/20',
-      };
-    case 'good':
-      return {
-        badge:
-          'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-700',
-        card: 'border-blue-200/60 bg-blue-50/50 dark:border-blue-800/60 dark:bg-blue-900/20',
-      };
-    case 'acceptable':
-      return {
-        badge:
-          'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/50 dark:text-amber-300 dark:border-amber-700',
-        card: 'border-amber-200/60 bg-amber-50/50 dark:border-amber-800/60 dark:bg-amber-900/20',
-      };
-    case 'poor':
-      return {
-        badge:
-          'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/50 dark:text-rose-300 dark:border-rose-700',
-        card: 'border-rose-200/60 bg-rose-50/50 dark:border-rose-800/60 dark:bg-rose-900/20',
-      };
-  }
 };
 
 export const SuggestedTimes = ({
@@ -66,7 +36,7 @@ export const SuggestedTimes = ({
       </CardHeader>
       <CardContent className="space-y-2 pt-0">
         {suggestions.map((suggestion, index) => {
-          const colors = getRatingColorClass(suggestion.rating);
+          const colors = RATING_COLOR_CLASSES[suggestion.rating];
           const period = getTimePeriod(suggestion.utcHour);
           const totalParticipants = suggestion.participantTimes.length;
           const isSelected = selectedSlot === suggestion.utcHour;

@@ -6,15 +6,15 @@ import { useCallback, useMemo, useState } from 'react';
 
 import type { Timezone } from '@/types';
 
-import { findTimezoneById, TIMEZONES } from '@/constants';
+import { findTimezoneById, TIME_PERIOD_LABELS, TIMEZONES } from '@/constants';
 import {
   convertTime,
   formatDateTimeWithTimezone,
   formatTimeInTimezone,
+  getInitialTimezoneId,
   getTimeDifferenceHours,
   getTimePeriod,
   getTimePeriodWarning,
-  getUserTimezone,
 } from '@/utils';
 
 const getCurrentTimeString = () => {
@@ -34,9 +34,7 @@ const getCurrentDateString = () => {
  * Get initial timezone - user's timezone if available in list, otherwise first in list
  */
 const getInitialTimezone = (): string => {
-  const userTimezone = getUserTimezone();
-  const found = findTimezoneById(userTimezone);
-  return found ? userTimezone : TIMEZONES[0]?.id || 'America/New_York';
+  return getInitialTimezoneId(findTimezoneById, TIMEZONES[0]?.id);
 };
 
 /**
@@ -116,14 +114,6 @@ export const useTimeConverter = () => {
                 ? `+${timeDifference} hours`
                 : `${timeDifference} hours`;
 
-          const periodLabels = {
-            'early-morning': '🌅 Early morning',
-            morning: '☀️ Morning',
-            afternoon: '🌤️ Working hours',
-            evening: '🏠 Evening',
-            night: '🌙 Night time',
-          };
-
           return {
             time: formatTimeInTimezone(converted, targetId, 'HH:mm'),
             fullDateTime: formatDateTimeWithTimezone(converted, targetId),
@@ -131,7 +121,7 @@ export const useTimeConverter = () => {
             timeDifference,
             timeDifferenceLabel,
             period,
-            periodLabel: periodLabels[period],
+            periodLabel: TIME_PERIOD_LABELS[period],
             warning,
             timezone: targetTimezone,
           };

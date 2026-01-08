@@ -5,4 +5,3 @@
 export { AddTimezoneDialog } from './add-timezone-dialog';
 export { ConvertedTimeCard } from './converted-time-card';
 export { SourceTimezoneCard } from './source-timezone-card';
-export { TargetTimezoneCard } from './target-timezone-card';

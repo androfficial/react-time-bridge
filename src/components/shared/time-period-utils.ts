@@ -2,7 +2,7 @@
  * Time period background color utilities
  */
 
-import type { TimePeriod } from '@/utils';
+import type { TimePeriod } from '@/types';
 
 /**
  * Get background color class based on time period

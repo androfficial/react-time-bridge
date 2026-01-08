@@ -4,18 +4,17 @@
 
 import { useState } from 'react';
 
+import type { TabValue } from '@/constants';
+
 import { Clock, Users } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { STORAGE_KEYS, VALID_TABS } from '@/constants';
 import { MeetingPlanner, TimeConverter } from '@/features';
-
-const TAB_STORAGE_KEY = 'time-bridge-active-tab';
-const VALID_TABS = ['converter', 'planner'] as const;
-type TabValue = (typeof VALID_TABS)[number];
 
 const getInitialTab = (): TabValue => {
   try {
-    const stored = localStorage.getItem(TAB_STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
     if (stored && VALID_TABS.includes(stored as TabValue)) {
       return stored as TabValue;
     }
@@ -32,7 +31,7 @@ export const MainTabs = () => {
     const tab = value as TabValue;
     setActiveTab(tab);
     try {
-      localStorage.setItem(TAB_STORAGE_KEY, tab);
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, tab);
     } catch {
       // localStorage not available
     }
