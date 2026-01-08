@@ -89,14 +89,19 @@ export const TimeInput = ({
             <ChevronDown className="text-muted-foreground h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-auto p-0">
+        <PopoverContent
+          align="start"
+          className="w-auto p-0"
+          side="bottom"
+          sideOffset={4}
+        >
           <div className="flex">
             {/* Hours column */}
             <div className="border-border/50 border-r">
               <div className="text-muted-foreground border-border/50 border-b px-3 py-2 text-center text-xs font-semibold">
                 Hour
               </div>
-              <ScrollArea className="h-50">
+              <ScrollArea className="h-48 sm:h-50">
                 <div className="p-1">
                   {HOURS.map((hour) => {
                     const h = parseInt(hour, 10);
@@ -128,7 +133,7 @@ export const TimeInput = ({
               <div className="text-muted-foreground border-border/50 border-b px-3 py-2 text-center text-xs font-semibold">
                 Min
               </div>
-              <ScrollArea className="h-50">
+              <ScrollArea className="h-48 sm:h-50">
                 <div className="p-1">
                   {MINUTES.map((minute) => (
                     <button

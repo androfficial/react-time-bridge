@@ -1,9 +1,12 @@
 /**
  * Time slot grid component showing 24-hour availability
- * Refactored to use extracted sub-components
+ * Grouped by time period for better UX
  */
 
 import type { MeetingSlotResult } from '@/types';
+import type { TimePeriod } from '@/utils';
+
+import { Moon, Sun, Sunrise, Sunset } from 'lucide-react';
 
 import { TimePeriodIcon } from '@/components/shared';
 import { cn } from '@/lib/utils';
@@ -17,6 +20,54 @@ type TimeSlotGridProps = {
   slots: MeetingSlotResult[];
   totalParticipants: number;
 };
+
+type TimeGroup = {
+  bgClass: string;
+  hours: number[];
+  Icon: typeof Sun;
+  iconColor: string;
+  label: string;
+  period: TimePeriod;
+};
+
+const timeGroups: TimeGroup[] = [
+  {
+    period: 'night',
+    label: 'Night',
+    hours: [0, 1, 2, 3, 4, 5],
+    Icon: Moon,
+    iconColor: 'text-indigo-500',
+    bgClass:
+      'from-indigo-50 to-indigo-100/50 dark:from-indigo-950/40 dark:to-indigo-900/20',
+  },
+  {
+    period: 'morning',
+    label: 'Morning',
+    hours: [6, 7, 8, 9, 10, 11],
+    Icon: Sunrise,
+    iconColor: 'text-amber-500',
+    bgClass:
+      'from-amber-50 to-orange-100/50 dark:from-amber-950/40 dark:to-orange-900/20',
+  },
+  {
+    period: 'afternoon',
+    label: 'Afternoon',
+    hours: [12, 13, 14, 15, 16, 17],
+    Icon: Sun,
+    iconColor: 'text-green-500',
+    bgClass:
+      'from-green-50 to-emerald-100/50 dark:from-green-950/40 dark:to-emerald-900/20',
+  },
+  {
+    period: 'evening',
+    label: 'Evening',
+    hours: [18, 19, 20, 21, 22, 23],
+    Icon: Sunset,
+    iconColor: 'text-blue-500',
+    bgClass:
+      'from-blue-50 to-sky-100/50 dark:from-blue-950/40 dark:to-sky-900/20',
+  },
+];
 
 export const TimeSlotGrid = ({
   slots,
@@ -50,6 +101,7 @@ export const TimeSlotGrid = ({
   };
 
   const selectedSlotData = slots.find((s) => s.utcHour === selectedSlot);
+  const slotsByHour = new Map(slots.map((s) => [s.utcHour, s]));
 
   return (
     <div className="space-y-3 sm:space-y-5">
@@ -80,41 +132,83 @@ export const TimeSlotGrid = ({
         </div>
       </div>
 
-      {/* Responsive Grid Layout */}
-      <div className="xs:grid-cols-6 grid grid-cols-4 gap-1 sm:grid-cols-8 sm:gap-2 md:grid-cols-12">
-        {slots.map((slot) => {
-          const period = getTimePeriod(slot.utcHour);
-          const isSelected = selectedSlot === slot.utcHour;
-          const isOptimal = slot.availableCount === totalParticipants;
+      {/* Time Period Groups */}
+      <div className="space-y-2">
+        {timeGroups.map((group) => {
+          const groupSlots = group.hours
+            .map((h) => slotsByHour.get(h))
+            .filter(Boolean) as MeetingSlotResult[];
+          const bestSlot = groupSlots.reduce(
+            (best, s) => (s.availableCount > best ? s.availableCount : best),
+            0
+          );
+          const hasOptimal = bestSlot === totalParticipants;
+
           return (
-            <button
-              aria-label={`${formatHour(slot.utcHour)} UTC - ${
-                slot.availableCount
-              } of ${totalParticipants} available`}
-              aria-pressed={isSelected}
+            <div
               className={cn(
-                'group relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg shadow-md transition-all duration-200 sm:rounded-xl',
-                getSlotColorClass(slot.availableCount, totalParticipants),
-                isSelected
-                  ? 'ring-primary ring-offset-background shadow-lg ring-2 ring-offset-1'
-                  : 'hover:-translate-y-0.5 hover:shadow-lg',
-                isOptimal && !isSelected && 'ring-2 ring-emerald-500/50'
+                'rounded-xl bg-linear-to-r p-2 sm:rounded-2xl sm:p-3',
+                group.bgClass
               )}
-              key={slot.utcHour}
-              onClick={() => onSlotSelect(slot.utcHour)}
-              type="button"
+              key={group.period}
             >
-              <TimePeriodIcon
-                className="mb-0.5 h-3 w-3 drop-shadow-sm sm:h-4 sm:w-4"
-                period={period}
-              />
-              <span className="text-xs leading-tight font-bold sm:text-sm">
-                {slot.utcHour.toString().padStart(2, '0')}
-              </span>
-              <span className="text-[8px] font-semibold opacity-70 sm:text-[9px]">
-                {slot.availableCount}/{totalParticipants}
-              </span>
-            </button>
+              {/* Group Header */}
+              <div className="mb-2 flex items-center gap-2">
+                <group.Icon className={cn('h-4 w-4', group.iconColor)} />
+                <span className="text-xs font-semibold sm:text-sm">
+                  {group.label}
+                </span>
+                {hasOptimal && (
+                  <span className="rounded-full bg-emerald-500 px-1.5 py-0.5 text-[8px] font-bold text-white sm:text-[10px]">
+                    ✓ Optimal
+                  </span>
+                )}
+              </div>
+
+              {/* Slots Grid */}
+              <div className="grid grid-cols-6 gap-1 sm:gap-2">
+                {group.hours.map((hour) => {
+                  const slot = slotsByHour.get(hour);
+                  if (!slot) return null;
+
+                  const period = getTimePeriod(slot.utcHour);
+                  const isSelected = selectedSlot === slot.utcHour;
+                  const isOptimal = slot.availableCount === totalParticipants;
+
+                  return (
+                    <button
+                      aria-label={`${formatHour(slot.utcHour)} UTC - ${slot.availableCount} of ${totalParticipants} available`}
+                      aria-pressed={isSelected}
+                      className={cn(
+                        'group relative flex h-12 w-full cursor-pointer flex-col items-center justify-center rounded-lg shadow-md transition-all duration-200 sm:h-14 sm:rounded-xl md:h-16',
+                        getSlotColorClass(
+                          slot.availableCount,
+                          totalParticipants
+                        ),
+                        isSelected
+                          ? 'ring-primary ring-offset-background shadow-lg ring-2 ring-offset-1'
+                          : 'hover:-translate-y-0.5 hover:shadow-lg',
+                        isOptimal && !isSelected && 'ring-2 ring-emerald-500/50'
+                      )}
+                      key={slot.utcHour}
+                      onClick={() => onSlotSelect(slot.utcHour)}
+                      type="button"
+                    >
+                      <TimePeriodIcon
+                        className="mb-0.5 h-3 w-3 drop-shadow-sm sm:h-4 sm:w-4"
+                        period={period}
+                      />
+                      <span className="text-xs leading-tight font-bold sm:text-sm">
+                        {slot.utcHour.toString().padStart(2, '0')}
+                      </span>
+                      <span className="text-[8px] font-semibold opacity-70 sm:text-[9px]">
+                        {slot.availableCount}/{totalParticipants}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
