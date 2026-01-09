@@ -2,6 +2,9 @@
  * Optimal slots summary component
  */
 
+import { useCallback } from 'react';
+import type { MouseEvent } from 'react';
+
 import type { MeetingSlotResult } from '@/types';
 
 import { AlertCircle, Sparkles } from 'lucide-react';
@@ -19,6 +22,16 @@ export const OptimalSlotsSummary = ({
   participantsCount,
   onSlotSelect,
 }: OptimalSlotsSummaryProps) => {
+  const handleSlotBadgeClick = useCallback(
+    (e: MouseEvent<HTMLSpanElement>) => {
+      const utcHour = Number(e.currentTarget.dataset.utcHour);
+      if (!Number.isNaN(utcHour)) {
+        onSlotSelect(utcHour);
+      }
+    },
+    [onSlotSelect]
+  );
+
   if (optimalSlots.length > 0) {
     return (
       <div
@@ -39,8 +52,9 @@ export const OptimalSlotsSummary = ({
           {optimalSlots.slice(0, 6).map((slot) => (
             <Badge
               className="h-6 cursor-pointer border-emerald-400/60 bg-white/95 px-2 text-[10px] font-bold text-emerald-700 tabular-nums shadow-sm transition-all duration-200 hover:bg-emerald-500 hover:text-white sm:h-7 sm:px-2.5 sm:text-xs dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-600"
+              data-utc-hour={slot.utcHour}
               key={slot.utcHour}
-              onClick={() => onSlotSelect(slot.utcHour)}
+              onClick={handleSlotBadgeClick}
               variant="outline"
             >
               {slot.utcHour.toString().padStart(2, '0')}:00

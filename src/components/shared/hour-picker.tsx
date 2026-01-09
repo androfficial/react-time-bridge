@@ -2,7 +2,8 @@
  * Hour picker component with dropdown for selecting hours (0-23)
  */
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { MouseEvent } from 'react';
 
 import { ChevronDown, Clock } from 'lucide-react';
 
@@ -29,6 +30,17 @@ export const HourPicker = ({
   disabled = false,
 }: HourPickerProps) => {
   const [open, setOpen] = useState(false);
+
+  const handleHourClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const hour = Number(e.currentTarget.dataset.hour);
+      if (!Number.isNaN(hour)) {
+        onChange(hour);
+        setOpen(false);
+      }
+    },
+    [onChange]
+  );
 
   const formatHour = (hour: number) => {
     const period = hour >= 12 ? 'PM' : 'AM';
@@ -72,11 +84,9 @@ export const HourPicker = ({
                     value === hour &&
                       'bg-primary text-primary-foreground hover:bg-primary/90'
                   )}
+                  data-hour={hour}
                   key={hour}
-                  onClick={() => {
-                    onChange(hour);
-                    setOpen(false);
-                  }}
+                  onClick={handleHourClick}
                   type="button"
                 >
                   <span className="font-semibold tabular-nums">{dh}</span>

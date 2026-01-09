@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
 
 import { ChevronDown, Clock } from 'lucide-react';
 
@@ -56,6 +57,26 @@ export const TimeInput = ({
       setOpen(false);
     },
     [hours, onChange]
+  );
+
+  const handleHourButtonClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const hour = e.currentTarget.dataset.hour;
+      if (hour) {
+        handleHourSelect(hour);
+      }
+    },
+    [handleHourSelect]
+  );
+
+  const handleMinuteButtonClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const minute = e.currentTarget.dataset.minute;
+      if (minute) {
+        handleMinuteSelect(minute);
+      }
+    },
+    [handleMinuteSelect]
   );
 
   const formatDisplayTime = (h: string, m: string) => {
@@ -116,8 +137,9 @@ export const TimeInput = ({
                           hours === hour &&
                             'bg-primary text-primary-foreground hover:bg-primary/90'
                         )}
+                        data-hour={hour}
                         key={hour}
-                        onClick={() => handleHourSelect(hour)}
+                        onClick={handleHourButtonClick}
                         type="button"
                       >
                         <span className="font-medium tabular-nums">
@@ -144,8 +166,9 @@ export const TimeInput = ({
                         minutes === minute &&
                           'bg-primary text-primary-foreground hover:bg-primary/90'
                       )}
+                      data-minute={minute}
                       key={minute}
-                      onClick={() => handleMinuteSelect(minute)}
+                      onClick={handleMinuteButtonClick}
                       type="button"
                     >
                       {minute}

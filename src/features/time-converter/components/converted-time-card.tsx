@@ -2,6 +2,8 @@
  * Converted time card component - displays time in a target timezone
  */
 
+import { useCallback } from 'react';
+
 import type { ConvertedTimeResult } from '../hooks/use-time-converter';
 
 import { Globe, X } from 'lucide-react';
@@ -21,8 +23,8 @@ type ConvertedTimeCardProps = {
   canRemove: boolean;
   convertedTime: ConvertedTimeResult;
   isBaseTimezone?: boolean;
-  onRemove: () => void;
-  onTimezoneChange: (newTimezoneId: string) => void;
+  onRemove: (timezoneId: string) => void;
+  onTimezoneChange: (oldTimezoneId: string, newTimezoneId: string) => void;
 };
 
 export const ConvertedTimeCard = ({
@@ -42,6 +44,17 @@ export const ConvertedTimeCard = ({
     warning,
   } = convertedTime;
 
+  const handleRemove = useCallback(() => {
+    onRemove(timezone.id);
+  }, [onRemove, timezone.id]);
+
+  const handleTimezoneChange = useCallback(
+    (newTimezoneId: string) => {
+      onTimezoneChange(timezone.id, newTimezoneId);
+    },
+    [onTimezoneChange, timezone.id]
+  );
+
   return (
     <Card
       className={cn(
@@ -60,7 +73,7 @@ export const ConvertedTimeCard = ({
         <Button
           aria-label={`Remove ${timezone.name} timezone`}
           className="text-muted-foreground hover:bg-destructive hover:text-destructive-foreground absolute top-2 left-2 z-10 h-6 w-6 rounded-md opacity-60 transition-all duration-200 hover:scale-110 hover:opacity-100"
-          onClick={onRemove}
+          onClick={handleRemove}
           size="icon"
           variant="ghost"
         >
@@ -104,7 +117,7 @@ export const ConvertedTimeCard = ({
       </CardHeader>
       <CardContent className="relative space-y-2 pt-0">
         <TimezoneSelect
-          onValueChange={onTimezoneChange}
+          onValueChange={handleTimezoneChange}
           placeholder="Select timezone"
           value={timezone.id}
         />

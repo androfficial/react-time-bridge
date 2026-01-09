@@ -3,6 +3,9 @@
  * Grouped by time period for better UX
  */
 
+import { useCallback } from 'react';
+import type { MouseEvent } from 'react';
+
 import type { MeetingSlotResult } from '@/types';
 
 import { TimePeriodIcon } from '@/components/shared';
@@ -25,6 +28,16 @@ export const TimeSlotGrid = ({
   selectedSlot,
   onSlotSelect,
 }: TimeSlotGridProps) => {
+  const handleSlotClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const utcHour = Number(e.currentTarget.dataset.utcHour);
+      if (!Number.isNaN(utcHour)) {
+        onSlotSelect(utcHour);
+      }
+    },
+    [onSlotSelect]
+  );
+
   if (slots.length === 0) {
     return (
       <div className="text-muted-foreground py-12 text-center">
@@ -140,8 +153,9 @@ export const TimeSlotGrid = ({
                           : 'hover:-translate-y-0.5 hover:shadow-lg',
                         isOptimal && !isSelected && 'ring-2 ring-emerald-500/50'
                       )}
+                      data-utc-hour={slot.utcHour}
                       key={slot.utcHour}
-                      onClick={() => onSlotSelect(slot.utcHour)}
+                      onClick={handleSlotClick}
                       type="button"
                     >
                       <TimePeriodIcon

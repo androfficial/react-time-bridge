@@ -71,10 +71,8 @@ export const TimeConverter = () => {
                 convertedTime={result}
                 isBaseTimezone={index === 0}
                 key={result.timezone.id}
-                onRemove={() => removeTargetTimezone(result.timezone.id)}
-                onTimezoneChange={(newId) =>
-                  updateTargetTimezone(result.timezone.id, newId)
-                }
+                onRemove={removeTargetTimezone}
+                onTimezoneChange={updateTargetTimezone}
               />
             ))}
           </div>

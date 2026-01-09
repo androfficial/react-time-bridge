@@ -2,6 +2,9 @@
  * Date input component for selecting dates
  */
 
+import { useCallback } from 'react';
+import type { ChangeEvent } from 'react';
+
 import { Calendar } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -19,6 +22,13 @@ export const DateInput = ({
   label,
   disabled = false,
 }: DateInputProps) => {
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
+
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
@@ -34,7 +44,7 @@ export const DateInput = ({
             'disabled:cursor-not-allowed disabled:opacity-50'
           )}
           disabled={disabled}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleInputChange}
           type="date"
           value={value}
         />

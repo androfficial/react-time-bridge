@@ -2,6 +2,9 @@
  * Suggested meeting times component - shows top 3 suggestions with scores
  */
 
+import { useCallback } from 'react';
+import type { MouseEvent } from 'react';
+
 import type { TimeSuggestion } from '@/types';
 
 import { Star, Trophy } from 'lucide-react';
@@ -26,6 +29,16 @@ export const SuggestedTimes = ({
   selectedSlot,
   onSlotSelect,
 }: SuggestedTimesProps) => {
+  const handleSuggestionClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const utcHour = Number(e.currentTarget.dataset.utcHour);
+      if (!Number.isNaN(utcHour)) {
+        onSlotSelect(utcHour);
+      }
+    },
+    [onSlotSelect]
+  );
+
   if (suggestions.length === 0) return null;
 
   return (
@@ -51,8 +64,9 @@ export const SuggestedTimes = ({
                   ? 'border-primary/60 bg-primary/5 shadow-sm'
                   : colors.card
               )}
+              data-utc-hour={suggestion.utcHour}
               key={suggestion.utcHour}
-              onClick={() => onSlotSelect(suggestion.utcHour)}
+              onClick={handleSuggestionClick}
               type="button"
             >
               <div className="flex items-start justify-between gap-2">

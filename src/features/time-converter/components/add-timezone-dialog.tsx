@@ -2,7 +2,7 @@
  * Dialog component for adding a new timezone
  */
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Plus } from 'lucide-react';
 
@@ -29,20 +29,24 @@ export const AddTimezoneDialog = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTimezone, setSelectedTimezone] = useState('');
 
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setSelectedTimezone('');
+  }, []);
+
   const handleAdd = () => {
     if (selectedTimezone) {
       onAdd(selectedTimezone);
-      setSelectedTimezone('');
-      setIsOpen(false);
+      handleClose();
     }
   };
 
-  const handleOpenChange = (open: boolean) => {
+  const handleOpenChange = useCallback((open: boolean) => {
     setIsOpen(open);
     if (!open) {
       setSelectedTimezone('');
     }
-  };
+  }, []);
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={isOpen}>
@@ -71,7 +75,7 @@ export const AddTimezoneDialog = ({
             value={selectedTimezone}
           />
           <div className="flex justify-end gap-2">
-            <Button onClick={() => setIsOpen(false)} variant="outline">
+            <Button onClick={handleClose} variant="outline">
               Cancel
             </Button>
             <Button disabled={!selectedTimezone} onClick={handleAdd}>

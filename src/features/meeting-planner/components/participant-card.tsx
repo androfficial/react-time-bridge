@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 
 import type { Participant } from '@/types';
 
@@ -28,11 +29,22 @@ export const ParticipantCard = ({
   onRemove,
   canRemove,
 }: ParticipantCardProps) => {
+  const handleRemoveClick = useCallback(() => {
+    onRemove(participant.id);
+  }, [onRemove, participant.id]);
+
   const handleNameChange = useCallback(
     (name: string) => {
       onUpdate({ ...participant, name });
     },
     [participant, onUpdate]
+  );
+
+  const handleNameInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      handleNameChange(e.target.value);
+    },
+    [handleNameChange]
   );
 
   const handleTimezoneChange = useCallback(
@@ -74,7 +86,7 @@ export const ParticipantCard = ({
         <Button
           aria-label={`Remove ${participant.name}`}
           className="text-muted-foreground hover:bg-destructive hover:text-destructive-foreground absolute top-3 right-3 z-10 h-7 w-7 rounded-lg opacity-0 transition-all duration-200 group-hover:opacity-100 hover:scale-110"
-          onClick={() => onRemove(participant.id)}
+          onClick={handleRemoveClick}
           size="icon"
           variant="ghost"
         >
@@ -95,7 +107,7 @@ export const ParticipantCard = ({
               <Input
                 className="h-10 rounded-lg pl-10 text-sm font-medium"
                 id={`name-${participant.id}`}
-                onChange={(e) => handleNameChange(e.target.value)}
+                onChange={handleNameInputChange}
                 placeholder="Name"
                 value={participant.name}
               />
