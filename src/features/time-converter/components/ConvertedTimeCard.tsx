@@ -4,7 +4,7 @@
 
 import { useCallback } from 'react';
 
-import type { ConvertedTimeResult } from '../hooks/use-time-converter';
+import type { ConvertedTimeResult } from '../hooks';
 
 import { Globe, X } from 'lucide-react';
 
