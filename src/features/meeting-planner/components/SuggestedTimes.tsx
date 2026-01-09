@@ -12,7 +12,7 @@ import { Star, Trophy } from 'lucide-react';
 import { TimePeriodIcon } from '@/components/shared';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RATING_COLOR_CLASSES } from '@/constants';
+import { MEETING_PLANNER_TEXT, RATING_COLOR_CLASSES } from '@/constants';
 import { cn } from '@/lib/utils';
 import { formatHour, getTimePeriod } from '@/utils';
 
@@ -39,21 +39,22 @@ export const SuggestedTimes = ({
     [onSlotSelect]
   );
 
-  if (suggestions.length === 0) return null;
+  if (!Array.isArray(suggestions) || suggestions.length === 0) return null;
 
   return (
     <Card className="border-border/50 bg-card/90 overflow-hidden backdrop-blur-sm">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold">
           <Trophy className="text-primary h-4 w-4" />
-          Suggested Meeting Times
+          {MEETING_PLANNER_TEXT.SUGGESTED_TIMES}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 pt-0">
         {suggestions.map((suggestion, index) => {
           const colors = RATING_COLOR_CLASSES[suggestion.rating];
           const period = getTimePeriod(suggestion.utcHour);
-          const totalParticipants = suggestion.participantTimes.length;
+          const participantTimes = suggestion.participantTimes ?? [];
+          const totalParticipants = participantTimes.length;
           const isSelected = selectedSlot === suggestion.utcHour;
 
           return (
@@ -98,7 +99,7 @@ export const SuggestedTimes = ({
 
               {/* Participant breakdown */}
               <div className="mt-2 flex flex-wrap gap-1">
-                {suggestion.participantTimes.map((pt) => (
+                {participantTimes.map((pt) => (
                   <span
                     className={cn(
                       'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium',

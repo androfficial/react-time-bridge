@@ -4,6 +4,8 @@
 
 import { Globe } from 'lucide-react';
 
+import { TIME_CONVERTER_TEXT } from '@/constants';
+
 import {
   AddTimezoneDialog,
   ConvertedTimeCard,
@@ -27,6 +29,9 @@ export const TimeConverter = () => {
     availableTimezones,
   } = useTimeConverter();
 
+  const hasConvertedTimes =
+    Array.isArray(convertedTimes) && convertedTimes.length > 0;
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-4 pt-1">
       {/* Source Time Section */}
@@ -45,7 +50,7 @@ export const TimeConverter = () => {
         <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
             <Globe className="text-primary h-4 w-4" />
-            Time in other zones
+            {TIME_CONVERTER_TEXT.SECTION_TITLE}
           </h3>
           <AddTimezoneDialog
             disabled={availableTimezones.length === 0}
@@ -53,14 +58,14 @@ export const TimeConverter = () => {
           />
         </div>
 
-        {convertedTimes.length === 0 ? (
+        {!hasConvertedTimes ? (
           <div className="bg-muted/40 border-muted-foreground/20 rounded-xl border-2 border-dashed p-8 text-center">
             <Globe className="text-muted-foreground/40 mx-auto mb-2 h-8 w-8" />
             <p className="text-muted-foreground text-sm font-medium">
-              No target timezones added yet
+              {TIME_CONVERTER_TEXT.EMPTY_STATE_TITLE}
             </p>
             <p className="text-muted-foreground/70 mt-1 text-xs">
-              Click "Add Timezone" to start converting
+              {TIME_CONVERTER_TEXT.EMPTY_STATE_HINT}
             </p>
           </div>
         ) : (

@@ -2,4 +2,4 @@
  * Time Converter feature exports
  */
 
-export { TimeConverter } from './time-converter';
+export { TimeConverter } from './TimeConverter';

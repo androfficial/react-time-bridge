@@ -8,6 +8,7 @@ import { Calendar, Download } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MEETING_PLANNER_TEXT } from '@/constants';
 import { downloadTextFile } from '@/utils';
 
 import {
@@ -39,6 +40,8 @@ export const MeetingPlanner = () => {
     downloadTextFile(text, fileName);
   }, [getExportText]);
 
+  const safeParticipants = Array.isArray(participants) ? participants : [];
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-4">
       <div className="grid gap-4 lg:grid-cols-[320px,1fr]">
@@ -47,11 +50,11 @@ export const MeetingPlanner = () => {
             onAdd={addParticipant}
             onRemove={removeParticipant}
             onUpdate={updateParticipant}
-            participants={participants}
+            participants={safeParticipants}
           />
 
           {/* Suggested Times - Top 3 */}
-          {participants.length > 0 && (
+          {safeParticipants.length > 0 && (
             <SuggestedTimes
               onSlotSelect={selectSlot}
               selectedSlot={selectedSlot}
@@ -75,22 +78,24 @@ export const MeetingPlanner = () => {
                 </div>
                 <div className="flex min-w-0 flex-col">
                   <span className="truncate text-base font-semibold sm:text-lg">
-                    Meeting Times
+                    {MEETING_PLANNER_TEXT.MEETING_TIMES}
                   </span>
                   <span className="text-muted-foreground xs:block hidden text-xs font-normal">
-                    Find the perfect time for everyone
+                    {MEETING_PLANNER_TEXT.FIND_PERFECT_TIME}
                   </span>
                 </div>
               </CardTitle>
               <Button
-                aria-label="Export meeting times to text file"
+                aria-label={MEETING_PLANNER_TEXT.EXPORT_ARIA_LABEL}
                 className="hover:bg-primary hover:text-primary-foreground border-border/60 text-foreground shrink-0 gap-2 rounded-xl px-3 text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg sm:px-4 dark:text-white"
                 onClick={handleExport}
                 size="sm"
                 variant="outline"
               >
                 <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Export</span>
+                <span className="hidden sm:inline">
+                  {MEETING_PLANNER_TEXT.EXPORT}
+                </span>
               </Button>
             </div>
           </CardHeader>
@@ -98,14 +103,14 @@ export const MeetingPlanner = () => {
             <OptimalSlotsSummary
               onSlotSelect={selectSlot}
               optimalSlots={optimalSlots}
-              participantsCount={participants.length}
+              participantsCount={safeParticipants.length}
             />
 
             <TimeSlotGrid
               onSlotSelect={selectSlot}
               selectedSlot={selectedSlot}
               slots={meetingSlots}
-              totalParticipants={participants.length}
+              totalParticipants={safeParticipants.length}
             />
           </CardContent>
         </Card>

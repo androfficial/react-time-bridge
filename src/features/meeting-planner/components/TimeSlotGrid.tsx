@@ -9,11 +9,11 @@ import type { MouseEvent } from 'react';
 import type { MeetingSlotResult } from '@/types';
 
 import { TimePeriodIcon } from '@/components/shared';
-import { TIME_GROUPS } from '@/constants';
+import { MEETING_PLANNER_TEXT, TIME_GROUPS } from '@/constants';
 import { cn } from '@/lib/utils';
 import { formatHour, getTimePeriod } from '@/utils';
 
-import { SlotDetails } from './slot-details';
+import { SlotDetails } from './SlotDetails';
 
 type TimeSlotGridProps = {
   onSlotSelect: (utcHour: number) => void;
@@ -38,12 +38,14 @@ export const TimeSlotGrid = ({
     [onSlotSelect]
   );
 
-  if (slots.length === 0) {
+  const safeSlots = Array.isArray(slots) ? slots : [];
+
+  if (safeSlots.length === 0) {
     return (
       <div className="text-muted-foreground py-12 text-center">
         <div className="mb-3 text-4xl">👥</div>
         <p className="text-sm font-medium">
-          Add participants to see available meeting times
+          {MEETING_PLANNER_TEXT.EMPTY_GRID_MESSAGE}
         </p>
       </div>
     );
@@ -63,33 +65,33 @@ export const TimeSlotGrid = ({
     return 'bg-linear-to-br from-rose-300 to-rose-400 hover:from-rose-400 hover:to-rose-500 text-rose-900 shadow-rose-400/20 dark:from-rose-400 dark:to-rose-500 dark:text-white';
   };
 
-  const selectedSlotData = slots.find((s) => s.utcHour === selectedSlot);
-  const slotsByHour = new Map(slots.map((s) => [s.utcHour, s]));
+  const selectedSlotData = safeSlots.find((s) => s.utcHour === selectedSlot);
+  const slotsByHour = new Map(safeSlots.map((s) => [s.utcHour, s]));
 
   return (
     <div className="space-y-3 sm:space-y-5">
       {/* Header with legend */}
       <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
         <h3 className="text-xs font-semibold sm:text-base">
-          24-Hour Availability (UTC)
+          {MEETING_PLANNER_TEXT.TIME_GRID_HEADER}
         </h3>
         <div className="flex items-center gap-2 text-[9px] sm:gap-5 sm:text-xs">
           <span className="flex items-center gap-1">
             <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-emerald-400 to-emerald-500 sm:h-4 sm:w-4 sm:rounded-lg" />
             <span className="text-muted-foreground font-medium sm:font-semibold">
-              All
+              {MEETING_PLANNER_TEXT.LEGEND_ALL}
             </span>
           </span>
           <span className="flex items-center gap-1">
             <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-amber-300 to-amber-400 sm:h-4 sm:w-4 sm:rounded-lg" />
             <span className="text-muted-foreground font-medium sm:font-semibold">
-              Some
+              {MEETING_PLANNER_TEXT.LEGEND_SOME}
             </span>
           </span>
           <span className="flex items-center gap-1">
             <div className="h-2.5 w-2.5 rounded bg-linear-to-br from-rose-300 to-rose-400 sm:h-4 sm:w-4 sm:rounded-lg" />
             <span className="text-muted-foreground font-medium sm:font-semibold">
-              None
+              {MEETING_PLANNER_TEXT.LEGEND_NONE}
             </span>
           </span>
         </div>
@@ -123,7 +125,7 @@ export const TimeSlotGrid = ({
                 </span>
                 {hasOptimal && (
                   <span className="rounded-full bg-emerald-500 px-1.5 py-0.5 text-[8px] font-bold text-white sm:text-[10px]">
-                    ✓ Optimal
+                    {MEETING_PLANNER_TEXT.OPTIMAL_LABEL}
                   </span>
                 )}
               </div>

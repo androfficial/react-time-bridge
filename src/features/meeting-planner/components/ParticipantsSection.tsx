@@ -10,8 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { MEETING_PLANNER_TEXT } from '@/constants';
 
-import { ParticipantCard } from './participant-card';
+import { ParticipantCard } from './ParticipantCard';
 
 type ParticipantsSectionProps = {
   onAdd: () => void;
@@ -26,6 +27,8 @@ export const ParticipantsSection = ({
   onUpdate,
   onRemove,
 }: ParticipantsSectionProps) => {
+  const safeParticipants = Array.isArray(participants) ? participants : [];
+
   return (
     <Card
       aria-labelledby="participants-heading"
@@ -48,15 +51,15 @@ export const ParticipantsSection = ({
                 className="truncate text-base font-semibold sm:text-lg"
                 id="participants-heading"
               >
-                Participants
+                {MEETING_PLANNER_TEXT.PARTICIPANTS}
               </span>
               <span className="text-muted-foreground xs:block hidden text-xs font-normal">
-                Manage team availability
+                {MEETING_PLANNER_TEXT.MANAGE_AVAILABILITY}
               </span>
             </div>
           </CardTitle>
           <Badge className="from-primary to-primary/80 text-primary-foreground h-6 min-w-6 justify-center bg-linear-to-r text-xs font-bold shadow-lg sm:h-7 sm:min-w-7 sm:text-sm">
-            {participants.length}
+            {safeParticipants.length}
           </Badge>
         </div>
       </CardHeader>
@@ -67,19 +70,19 @@ export const ParticipantsSection = ({
           size="lg"
         >
           <Plus aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" />
-          Add Participant
+          {MEETING_PLANNER_TEXT.ADD_PARTICIPANT}
         </Button>
 
         <ScrollArea className="h-100 pr-2">
           <div className="space-y-3 pt-1">
-            {participants.map((participant, index) => (
+            {safeParticipants.map((participant, index) => (
               <div
                 className="animate-slide-up"
                 key={participant.id}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <ParticipantCard
-                  canRemove={participants.length > 1}
+                  canRemove={safeParticipants.length > 1}
                   onRemove={onRemove}
                   onUpdate={onUpdate}
                   participant={participant}

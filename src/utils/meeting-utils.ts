@@ -21,6 +21,15 @@ import {
 } from './timezone-utils';
 
 /**
+ * Combined meeting data result from single calculation pass
+ */
+export interface MeetingData {
+  optimalSlots: MeetingSlotResult[];
+  slots: MeetingSlotResult[];
+  topSuggestions: TimeSuggestion[];
+}
+
+/**
  * Calculate meeting availability for all 24 UTC hours
  */
 export const calculateMeetingSlots = (
@@ -223,4 +232,87 @@ export const getAvailabilityLabel = (
  */
 export const generateParticipantId = (): string => {
   return `participant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
+/**
+ * Calculate all meeting data in a single pass
+ * This optimizes by computing slots once and deriving other values from them
+ */
+export const calculateMeetingData = (
+  participants: Participant[],
+  referenceDate: Date = new Date()
+): MeetingData => {
+  // Single pass to calculate all slots
+  const slots = calculateMeetingSlots(participants, referenceDate);
+
+  // Derive optimal slots from calculated slots
+  const optimalSlots = slots.filter((slot) => slot.allAvailable);
+
+  // Calculate suggestions from slots (reusing calculated data)
+  const participantById = new Map(participants.map((p) => [p.id, p]));
+
+  const suggestions: TimeSuggestion[] = slots.map((slot) => {
+    const { score, perfectCount, acceptableCount } =
+      calculateSlotDetailedScore(slot);
+    const rating = getMeetingRating(score);
+
+    const participantTimes = slot.participantTimes
+      .map((pt) => {
+        const participant = participantById.get(pt.participantId);
+        if (!participant) return null;
+
+        const period = pt.period;
+        const suitable = isTimePeriodSuitable(period);
+        const acceptable = isTimePeriodAcceptable(period);
+
+        const localTime = new Date(referenceDate);
+        localTime.setHours(pt.localHour, 0, 0, 0);
+
+        return {
+          participant,
+          localTime,
+          localHour: pt.localHour,
+          suitable,
+          acceptable,
+          warning: pt.warning,
+        };
+      })
+      .filter((pt): pt is NonNullable<typeof pt> => pt !== null);
+
+    const time = new Date(referenceDate);
+    time.setUTCHours(slot.utcHour, 0, 0, 0);
+
+    return {
+      time,
+      utcHour: slot.utcHour,
+      score,
+      rating,
+      perfectCount,
+      acceptableCount,
+      participantTimes,
+    };
+  });
+
+  // Sort by score (descending) and take top 3
+  const topSuggestions = suggestions
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  return {
+    slots,
+    optimalSlots,
+    topSuggestions,
+  };
+};
+
+/**
+ * Check if a slot is still valid for given participants
+ * A slot is valid if it exists in the optimal slots
+ */
+export const isSlotValid = (
+  slotUtcHour: number | null,
+  optimalSlots: MeetingSlotResult[]
+): boolean => {
+  if (slotUtcHour === null) return true;
+  return optimalSlots.some((slot) => slot.utcHour === slotUtcHour);
 };

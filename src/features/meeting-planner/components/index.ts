@@ -2,9 +2,9 @@
  * Components index for Meeting Planner
  */
 
-export { OptimalSlotsSummary } from './optimal-slots-summary';
-export { ParticipantCard } from './participant-card';
-export { ParticipantsSection } from './participants-section';
-export { SlotDetails } from './slot-details';
-export { SuggestedTimes } from './suggested-times';
-export { TimeSlotGrid } from './time-slot-grid';
+export { OptimalSlotsSummary } from './OptimalSlotsSummary';
+export { ParticipantCard } from './ParticipantCard';
+export { ParticipantsSection } from './ParticipantsSection';
+export { SlotDetails } from './SlotDetails';
+export { SuggestedTimes } from './SuggestedTimes';
+export { TimeSlotGrid } from './TimeSlotGrid';
