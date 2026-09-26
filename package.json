@@ -1,5 +1,5 @@
 {
-  "name": "react-time-bridge-test-task",
+  "name": "react-time-bridge",
   "version": "1.0.0",
   "description": "A React application for time zone conversion and meeting planning across different time zones. Built with React, TypeScript, Tailwind CSS, and Radix UI.",
   "private": true,
@@ -8,12 +8,11 @@
     "name": "Andrii Nakonechnyi",
     "email": "andriinkn@gmail.com"
   },
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/androfficial/react-time-bridge-test-task.git"
+    "url": "git+https://github.com/androfficial/react-time-bridge.git"
   },
-  "homepage": "https://github.com/androfficial/react-time-bridge-test-task#readme",
+  "homepage": "https://react-time-bridge.vercel.app",
   "bugs": {
     "url": "https://github.com/androfficial/react-time-bridge-test-task/issues"
   },

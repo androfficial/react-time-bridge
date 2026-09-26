@@ -2,7 +2,7 @@
 
 Time zone converter and meeting planner for distributed teams: convert a date and time into several zones at once, or find the hours that fall inside everyone's working day. Built in January 2026 as a take-home assignment.
 
-**Live demo:** [react-time-bridge-test-task.vercel.app](https://react-time-bridge-test-task.vercel.app)
+**Live demo:** [react-time-bridge.vercel.app](https://react-time-bridge.vercel.app)
 
 ## Features
 
